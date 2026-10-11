@@ -1,0 +1,152 @@
+name: Setup
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create files
+        run: |
+          mkdir -p practice-01/js practice-01/screenshots
+          printf '%s\n' 'node_modules/' 'dist/' '.env' '.env.*' '!.env.example' '*.log' '.DS_Store' 'Thumbs.db' > .gitignore
+          cat > README.md << 'XEOF'
+          # Технологии индустриального программирования
+          Учебный репозиторий практических работ по JavaScript.
+          ## Автор
+          Имя: Куксов Денис Сергеевич
+          Группа: ЭФБО-14-25
+          Вариант: 2
+          ## Практические работы
+          - [Практическая работа № 1](./practice-01/README.md)
+          XEOF
+          cat > practice-01/index.html << 'XEOF'
+          <!doctype html>
+          <html lang="ru">
+          <head><meta charset="UTF-8"><title>ПР1</title><script src="./js/hello.js" defer></script></head>
+          <body><main><h1>Практическая работа № 1</h1><p>Результаты в Console.</p></main></body>
+          </html>
+          XEOF
+          cat > practice-01/js/hello.js << 'XEOF'
+          "use strict";
+          const studentName = "Куксов Денис Сергеевич";
+          const groupName = "ЭФБО-14-25";
+          const practiceNumber = 1;
+          console.log(`Студент: ${studentName}`);
+          console.log(`Группа: ${groupName}`);
+          console.log(`Практическая работа: ${practiceNumber}`);
+          console.log("JavaScript успешно запущен");
+          console.log("Тип document:", typeof document);
+          XEOF
+          cat > practice-01/js/types.js << 'XEOF'
+          "use strict";
+          console.log('1.', "8" + 2, typeof ("8" + 2));
+          console.log('2.', "8" - 2, typeof ("8" - 2));
+          console.log('3.', Number("8") + 2, typeof (Number("8") + 2));
+          console.log('4.', "12" > "3", typeof ("12" > "3"));
+          console.log('5.', 12 === "12", typeof (12 === "12"));
+          console.log('6.', Number(""), typeof Number(""));
+          console.log('7.', Number("text"), typeof Number("text"));
+          console.log('8.', Boolean("false"), typeof Boolean("false"));
+          console.log('9.', typeof null);
+          console.log('10.', typeof NaN);
+          XEOF
+          cat > practice-01/js/progress.js << 'XEOF'
+          "use strict";
+          const totalTasks = 15;
+          const completedTasks = 0;
+          if (typeof totalTasks !== "number" || typeof completedTasks !== "number") console.log("Ошибка: количество задач должно быть числом.");
+          else if (!Number.isFinite(totalTasks) || !Number.isFinite(completedTasks)) console.log("Ошибка: недопустимое числовое значение.");
+          else if (!Number.isInteger(totalTasks) || !Number.isInteger(completedTasks)) console.log("Ошибка: количество задач должно быть целым числом.");
+          else if (totalTasks < 0 || completedTasks < 0) console.log("Ошибка: отрицательное количество задач.");
+          else if (totalTasks > 1000) console.log("Ошибка: превышена верхняя граница.");
+          else if (completedTasks > totalTasks) console.log("Ошибка: выполнено больше, чем существует.");
+          else if (totalTasks === 0 && completedTasks === 0) console.log("Задач пока нет");
+          else {
+            const remainingTasks = totalTasks - completedTasks;
+            const progress = completedTasks / totalTasks * 100;
+            let status = completedTasks === 0 ? "Не начато" : completedTasks === totalTasks ? "Завершено" : "В работе";
+            console.log(`Всего задач: ${totalTasks}`);
+            console.log(`Выполнено: ${completedTasks}`);
+            console.log(`Осталось: ${remainingTasks}`);
+            console.log(`Прогресс: ${progress.toFixed(1)}%`);
+            console.log(`Статус: ${status}`);
+          }
+          XEOF
+          cat > practice-01/js/plan.js << 'XEOF'
+          "use strict";
+          const totalTasks = 15;
+          const completedTasks = 0;
+          const dailyLimit = 4;
+          if (typeof totalTasks !== "number" || typeof completedTasks !== "number") console.log("Ошибка: количество задач должно быть числом.");
+          else if (!Number.isInteger(totalTasks) || !Number.isInteger(completedTasks)) console.log("Ошибка: количество задач должно быть целым числом.");
+          else if (totalTasks < 0 || completedTasks < 0) console.log("Ошибка: отрицательное количество задач.");
+          else if (totalTasks > 1000) console.log("Ошибка: превышена верхняя граница.");
+          else if (completedTasks > totalTasks) console.log("Ошибка: выполнено больше, чем существует.");
+          else if (typeof dailyLimit !== "number") console.log("Ошибка: дневная норма должна быть числом.");
+          else if (!Number.isInteger(dailyLimit)) console.log("Ошибка: дробной дневной нормы быть не должно.");
+          else if (dailyLimit < 1 || dailyLimit > 1000) console.log("Ошибка: дневная норма от 1 до 1000.");
+          else {
+            let remainingTasks = totalTasks - completedTasks;
+            let days = 0;
+            if (remainingTasks === 0) console.log("Все задачи уже выполнены");
+            else {
+              console.log(`Осталось задач: ${remainingTasks}`);
+              while (remainingTasks > 0) {
+                days += 1;
+                const doneToday = Math.min(dailyLimit, remainingTasks);
+                remainingTasks -= doneToday;
+                console.log(`День ${days}: выполнено ${doneToday}, осталось ${remainingTasks}`);
+              }
+            }
+            console.log(`Потребуется дней: ${days}`);
+          }
+          XEOF
+          cat > practice-01/js/debug.js << 'XEOF'
+          "use strict";
+          const plannedText = "8";
+          const completedText = "3";
+          const additionalText = "2";
+          const completedTotal = Number(completedText) + Number(additionalText);
+          const remainingTasks = Number(plannedText) - completedTotal;
+          console.log("Выполнено:", completedTotal);
+          console.log("Осталось:", remainingTasks);
+          let controlSum = 0;
+          for (let taskNumber = 1; taskNumber <= 4; taskNumber += 1) controlSum += taskNumber;
+          console.log("Контрольная сумма:", controlSum);
+          XEOF
+          cat > practice-01/README.md << 'XEOF'
+          # Практическая работа № 1
+          Автор: Куксов Денис Сергеевич
+          Группа: ЭФБО-14-25
+          Вариант: 2 (15, 0, 4)
+          ## Запуск
+          node practice-01/js/hello.js
+          node practice-01/js/types.js
+          node practice-01/js/progress.js
+          node practice-01/js/plan.js
+          node practice-01/js/debug.js
+          ## Задание 1
+          Node.js: typeof document = undefined
+          Браузер: typeof document = object
+          ## Задание 2
+          "8"+2="82"(string); "8"-2=6(number); Number("8")+2=10(number); "12">"3"=false; 12==="12"=false; Number("")=0; Number("text")=NaN; Boolean("false")=true; typeof null="object"; typeof NaN="number".
+          ## Задания 3 и 4
+          Проверено на варианте 2 и общих случаях — пройдено.
+          ## Отладка
+          Было: 32, -24, 6. Причины: конкатенация строк и цикл <4.
+          Стало: 5, 3, 10.
+          ## Вывод
+          Освоены Node.js, браузер, типы, условия, циклы.
+          XEOF
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --staged --quiet || git commit -m "feat: practice 01"
+          git push
