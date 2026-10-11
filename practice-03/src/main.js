@@ -23,25 +23,89 @@ elements.datasetLabel.textContent = isVariant
   ? `Индивидуальный вариант: ${variantNumber ?? "не указан"}`
   : "Общий контрольный набор";
 
+const FILTER_VALUES = new Set(["all", "pending", "completed"]);
+
+function setMessage(text) {
+  elements.message.textContent = text;
+}
+
+// Полный список + фильтр -> видимая выборка -> список, сводка, пустое состояние.
+// currentTasks только читается, обработчики здесь не назначаются.
 function renderApp() {
-  // TODO: отобрать видимые задачи; обновить список, общую сводку и пустое состояние.
-  // TODO: для кнопок фильтра обновить is-active и aria-pressed.
-  // Не изменять currentTasks и не добавлять обработчики событий в этой функции.
-  throw new Error("Не реализовано: renderApp");
+  const visibleTasks = getVisibleTasks(currentTasks, currentFilter);
+
+  renderTaskList(elements.list, visibleTasks);
+  renderSummary(elements.summary, currentTasks, visibleTasks.length);
+  renderEmptyState(elements.empty, currentTasks.length, visibleTasks.length);
+
+  elements.filters.querySelectorAll("button[data-filter]").forEach((button) => {
+    const active = button.dataset.filter === currentFilter;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+}
+
+// Строка из data-task-id -> положительное безопасное целое или null.
+// Number("4abc") даёт NaN, поэтому "4abc" не превращается в 4 (в отличие от parseInt).
+function readTaskId(card) {
+  const id = Number(card.dataset.taskId);
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
 function handleTaskListClick(event) {
-  // TODO: найти кнопку через closest(), проверить её принадлежность списку.
-  // TODO: распознать toggle/delete; прочитать и проверить числовой id карточки.
-  // TODO: вызвать функцию ПР2, разобрать ok/error, сохранить успешный результат.
-  // TODO: renderApp(), затем restoreTaskFocus(id, action).
-  throw new Error("Не реализовано: handleTaskListClick");
+  if (!(event.target instanceof Element)) return;
+
+  // Клик мог прийти по вложенному span — поднимаемся до кнопки.
+  const button = event.target.closest("button[data-action]");
+  if (button === null || !elements.list.contains(button)) return;
+
+  const { action } = button.dataset;
+  if (action !== "toggle" && action !== "delete") return;
+
+  const card = button.closest("li[data-task-id]");
+  if (card === null) return;
+
+  const id = readTaskId(card);
+  if (id === null) {
+    setMessage(`Ошибка: в карточке неверный идентификатор «${card.dataset.taskId}»`);
+    return;
+  }
+
+  let result;
+  if (action === "delete") {
+    result = removeTask(currentTasks, id);
+  } else {
+    // Текущий статус читается из массива, а не из текста кнопки или класса карточки.
+    const task = findTaskById(currentTasks, id);
+    result = task === undefined
+      ? { ok: false, error: `Задача ${id} не найдена` }
+      : setTaskCompleted(currentTasks, id, !task.completed);
+  }
+
+  if (!result.ok) {
+    setMessage(`Ошибка: ${result.error}`);
+    return;
+  }
+
+  currentTasks = result.tasks;
+  setMessage("");
+  renderApp();
+  restoreTaskFocus(id, action);
 }
 
 function handleFilterClick(event) {
-  // TODO: найти кнопку фильтра, проверить all/pending/completed.
-  // TODO: изменить только currentFilter, очистить сообщение и вызвать renderApp().
-  throw new Error("Не реализовано: handleFilterClick");
+  if (!(event.target instanceof Element)) return;
+
+  const button = event.target.closest("button[data-filter]");
+  if (button === null || !elements.filters.contains(button)) return;
+
+  const nextFilter = button.dataset.filter;
+  if (!FILTER_VALUES.has(nextFilter)) return;
+
+  // Меняется только режим показа; currentTasks не трогаем.
+  currentFilter = nextFilter;
+  setMessage("");
+  renderApp();
 }
 
 // Готовая вспомогательная функция. Сохраняет понятную позицию клавиатурного фокуса
