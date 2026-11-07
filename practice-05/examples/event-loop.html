@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ПР5 — Порядок выполнения JavaScript</title>
+  <link rel="stylesheet" href="../styles.css">
+  <script type="module" src="./event-loop-browser.js"></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="eyebrow">Практическая работа № 5</p>
+      <h1>Event loop</h1>
+      <p class="lead">Нажмите кнопку и посмотрите порядок синхронного кода, микрозадач и таймера.</p>
+      <nav class="page-links"><a href="../index.html">К приложению задач</a><a href="../index.html?dataset=variant">Вариант № 2</a></nav>
+    </header>
+    <section class="panel">
+      <div class="panel-heading"><div><p class="section-kicker">Интерактивный эксперимент</p><h2>Очередь выполнения</h2></div><button id="run-experiment" type="button">Запустить эксперимент</button></div>
+      <ol id="event-log" class="event-log" aria-live="polite"><li>Нажмите «Запустить эксперимент».</li></ol>
+      <p id="event-summary" class="request-message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14243a">
+  <title>ПР5 — Асинхронная загрузка задач</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./src/browser-main.js"></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="eyebrow">Технологии индустриального программирования / ПР5</p>
+      <h1>Задачи из REST API</h1>
+      <p class="lead">Асинхронная загрузка данных, фильтрация и обработка HTTP-ошибок.</p>
+      <nav class="page-links" aria-label="Учебные страницы">
+        <a href="./index.html">Общий набор</a>
+        <a href="./index.html?dataset=variant">Вариант № 2</a>
+        <a href="./examples/event-loop.html">Event loop</a>
+      </nav>
+      <div class="api-line"><span class="status-dot" id="api-dot"></span><span id="api-status">Подключение к API…</span><code id="api-url">http://127.0.0.1:5505/api</code></div>
+    </header>
+
+    <section class="stats-grid" aria-label="Сводка">
+      <article class="stat-card"><span>Найдено</span><strong id="stat-total">—</strong></article>
+      <article class="stat-card"><span>Категорий</span><strong id="stat-categories">—</strong></article>
+      <article class="stat-card"><span>Время ответа</span><strong id="stat-time">—</strong></article>
+      <article class="stat-card"><span>HTTP-статус</span><strong id="stat-http">—</strong></article>
+    </section>
+
+    <section class="panel" aria-labelledby="filters-heading">
+      <div class="panel-heading">
+        <div><p class="section-kicker">GET /api/tasks</p><h2 id="filters-heading">Параметры запроса</h2></div>
+        <button id="refresh-list" class="button-secondary" type="button">Обновить</button>
+      </div>
+      <form id="filters-form">
+        <div class="filter-grid">
+          <label class="field field-wide">Поиск по названию<input name="q" id="filter-query" type="search" maxlength="100" placeholder="Например, JavaScript"></label>
+          <label class="field">Статус<select name="completed" id="filter-completed"><option value="">Все</option><option value="false">В работе</option><option value="true">Выполненные</option></select></label>
+          <label class="field">Приоритет<select name="priority" id="filter-priority"><option value="">Любой</option><option value="low">Низкий</option><option value="medium">Средний</option><option value="high">Высокий</option></select></label>
+          <label class="field">Категория<select name="categoryId" id="filter-category"><option value="">Все категории</option></select></label>
+        </div>
+        <div class="form-actions"><button type="submit">Применить фильтры</button><button id="clear-filters" class="button-secondary" type="button">Сбросить</button></div>
+      </form>
+      <p id="request-message" class="request-message" role="status" aria-live="polite">Загружаем данные…</p>
+    </section>
+
+    <section class="panel" aria-labelledby="tasks-heading">
+      <div class="panel-heading"><div><p class="section-kicker">Ответ сервера</p><h2 id="tasks-heading">Список задач</h2></div><span class="result-count" id="result-count">—</span></div>
+      <div id="list-state" class="list-state" role="status" aria-live="polite">Ожидание ответа API…</div>
+      <ul id="task-list" class="task-list" aria-label="Задачи"></ul>
+    </section>
+
+    <section class="panel detail-panel" aria-labelledby="detail-heading">
+      <div class="panel-heading"><div><p class="section-kicker">GET /api/tasks/:id</p><h2 id="detail-heading">Карточка запроса</h2></div><button id="test-404" type="button" class="button-secondary">Проверить 404</button></div>
+      <p id="detail-message" class="muted">Нажмите «Подробнее» у задачи, чтобы получить одну запись с сервера.</p>
+      <pre id="detail-output" hidden></pre>
+    </section>
+
+    <footer class="page-footer">Практическая работа № 5 · Вариант № 2 · Куксов Денис Сергеевич · ЭФБО-14-25</footer>
+  </main>
+</body>
+</html>
