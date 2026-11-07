@@ -1,0 +1,13 @@
+1. GET /health: status=200, ok=true
+{"data":{"status":"ok"}}
+2. GET /tasks: status=200, ok=true
+count=12; ids=[1,4,7,10,13,16,19,22,25,28,31,34]
+3. GET /tasks?completed=false&priority=high: status=200, ok=true
+count=3; ids=[4,13,34]; meta={"total":3,"filters":{"completed":false,"priority":"high","categoryId":null,"q":""}}
+4. Promise.all: tasks=12; categories=3
+5. GET /tasks/25: status=200, ok=true
+{"id":25,"title":"Исправить обработку ошибок","completed":true,"priority":"high","categoryId":2}
+5b. GET /tasks/999: status=404, ok=false
+{"error":{"code":"TASK_NOT_FOUND","message":"Задача с id 999 не найдена.","details":{"id":999}}}
+6. API stopped: network error (ECONNREFUSED)
+7. API restarted: status=200, ok=true, body={"data":{"status":"ok"}}

@@ -1,0 +1,14 @@
+Практика 6 — индивидуальный вариант № 2: completed=true
+POST /debug/reset: 200 данные восстановлены
+GET /tasks?completed=true: 200 [ 1, 10, 16, 25, 31 ]
+GET /tasks/1 до изменения: 200 completed = true
+PATCH /tasks/1 { completed: false }: 200 {
+  id: 1,
+  title: 'Изучить функции',
+  completed: false,
+  priority: 'medium',
+  categoryId: 1
+}
+GET /tasks?completed=true после изменения: 200 [ 10, 16, 25, 31 ]
+GET /tasks/1 после изменения: 200 completed = false
+Вывод: задача id=1 возвращена в работу и исключена сервером из выборки completed=true.

@@ -1,0 +1,49 @@
+Проверка учебного API через curl
+API: http://127.0.0.1:5507/api
+Дата: 2026-11-07
+
+===== GET /health =====
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 24
+Cache-Control: no-store
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+Access-Control-Allow-Headers: Accept, Content-Type
+Access-Control-Max-Age: 600
+Date: Sat, 07 Nov 2026 16:37:43 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"data":{"status":"ok"}}
+===== GET /tasks/25 =====
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 129
+Cache-Control: no-store
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+Access-Control-Allow-Headers: Accept, Content-Type
+Access-Control-Max-Age: 600
+Date: Sat, 07 Nov 2026 16:37:43 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"data":{"id":25,"title":"Исправить обработку ошибок","completed":true,"priority":"high","categoryId":2}}
+===== GET /tasks/999 =====
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+Content-Length: 112
+Cache-Control: no-store
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+Access-Control-Allow-Headers: Accept, Content-Type
+Access-Control-Max-Age: 600
+Date: Sat, 07 Nov 2026 16:37:43 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"error":{"code":"TASK_NOT_FOUND","message":"Задача с id 999 не найдена.","details":{"id":999}}}
